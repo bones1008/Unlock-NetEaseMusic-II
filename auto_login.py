@@ -35,7 +35,7 @@ def extension_login():
     chrome_options = webdriver.ChromeOptions()
 
     logging.info("Load Chrome extension NetEaseMusicWorldPlus")
-    chrome_options.add_extension('NetEaseMusicWorldPlus.crx')
+    #chrome_options.add_extension('NetEaseMusicWorldPlus.crx')
 
     logging.info("Initializing Chrome WebDriver")
     try:
