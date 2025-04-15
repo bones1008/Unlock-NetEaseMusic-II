@@ -49,3 +49,12 @@ jobs:
           PYTHONIOENCODING: utf-8
           PYTHONLEGACYWINDOWSSTDIO: utf-8
         run: python auto_login.py
+      - name: Upload debug files
+        if: always()  # Ensure it runs even if script fails
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-files
+          path: |
+            debug_output.png
+            page.html
+
