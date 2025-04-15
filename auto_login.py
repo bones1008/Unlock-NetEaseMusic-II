@@ -11,6 +11,20 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from retrying import retry
 
+from selenium.webdriver.chrome.options import Options
+
+chrome_options = Options()
+
+# Make Chrome look more real
+chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+
+# Remove automation notice in navigator.webdriver
+chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+chrome_options.add_experimental_option('useAutomationExtension', False)
+
+service = Service(ChromeDriverManager().install())
+browser = webdriver.Chrome(service=service, options=chrome_options)
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(asctime)s %(message)s')
 
@@ -54,6 +68,15 @@ def extension_login():
     logging.info("Injecting Cookie to skip login")
     browser.add_cookie({"name": "MUSIC_U", "value": "00A3F70C074FAA12CE7C125FFEBC7B06F8806991BA08E5C8FC221E8C29B57A5633F28A16DEC616C74A8EDEC830D8FAB0750806848BAAF79B330C89071E9903C3CB4E0C448B039AA3753895D41C73A0A288630D515870DB341142E053FF7302AEE32B1B6C463C903CD32A25C5BB0D23B44F0327E609EC90F4A5C69891DFA18DE5683C7B6E0B5BDEDC44651AF53CD8B2F3F5BEC04A4E7A9F7E1A54C6ECF24A0C43D1EDB59DA9CE3B339D5C803CAEB01839EF8C59456AE7BC253B78B9C44AE6B42F2628DC3F55BAF52BA4BB837E052C65A79C10FFBE8D58B56BF67614D510423AEEE3C79563948928B5B8F5313C4B961A4D9F9B426A10395A8555891794D61141AAEA51CA97AA501266EFE05B90B2CAAF71C37A540E7258F4072424A8DFF5C7D14856B5CFCF09111330946442B9996B1ACF3638ED0D5CE3601918B5034E5D6D83C92105A4EFE40D8439F9F9AE76C79848821BBA6FEF1410F250F09F08E6C4682A3ECB"})
     browser.refresh()
+    time.sleep(5)
+    
+    # Save screenshot and HTML for debugging
+    browser.save_screenshot("debug_output.png")
+    with open("page.html", "w", encoding="utf-8") as f:
+        f.write(browser.page_source)
+    
+    print("Saved page state for debugging.")
+
     time.sleep(5)  # Wait for the page to refresh
     logging.info("Cookie login successful")
 
